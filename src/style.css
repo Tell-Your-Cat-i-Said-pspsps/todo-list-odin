@@ -1,0 +1,105 @@
+:root {
+  --items-background: #f8fafc;
+  --background-color: #e2e8f0;
+  --btn-background: #020617;
+  --svg-filter: invert(2%) sepia(30%) saturate(7484%) hue-rotate(224deg)
+    brightness(90%) contrast(101%);
+  height: 100%;
+}
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap");
+body {
+  font-family: "Roboto Condensed", sans-serif;
+  background-color: var(--background-color);
+  display: grid;
+  margin: 0;
+  height: 100%;
+}
+.header {
+  display: flex;
+  align-items: center;
+  border-radius: 50dvh;
+  padding: 4px 16px;
+  background-color: var(--items-background);
+  grid-column: span 2;
+}
+.header > a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--btn-background);
+  font-size: 32px;
+  font-weight: 700;
+}
+.inputGrp {
+  margin: 4px;
+  color: var(--btn-background);
+}
+.inputGrp > input[type="radio"] {
+  display: none;
+}
+.inputGrp:has(input[type="radio"]:checked) {
+  border-bottom: 2px solid var(--btn-background);
+}
+.logo {
+  filter: var(--svg-filter);
+  height: 80px;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  grid-template-rows: auto 1fr;
+  gap: 8px;
+  margin: 4px 8px;
+}
+.sideBar {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  background-color: var(--items-background);
+  padding: 16px 32px;
+  font-size: 24px;
+  border-radius: 16px;
+}
+.pages {
+  display: flex;
+  flex-direction: column;
+}
+.projects {
+  margin: 8px 4px;
+}
+.projects > dd {
+  display: list-item;
+  list-style-type: "#";
+  padding-inline-start: 1ch;
+}
+.addBtn {
+  background-color: transparent;
+  border: none;
+  justify-self: start;
+}
+.addBtnImg {
+  height: 60px;
+  widows: auto;
+}
+.addBtnImg:hover {
+  height: 80px;
+  filter: var(--svg-filter);
+}
+.addProjectModal[open=""] {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--items-background);
+}
+.modalAddBtn {
+  background-color: var(--background-color);
+}
+.modalAddBtn:active,
+.modalAddBtn:hover {
+  background-color: var(--btn-background);
+  color: var(--items-background);
+}

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <a href="#">
+          <img class="logo" src="./list-box-outline.svg" alt="Logo" />
+          TODO
+        </a>
+      </div>
+      <div class="sideBar">
+        <div class="pages">
+          <div class="inputGrp">
+            <input type="radio" id="home" name="pages" />
+            <label for="home">Home</label>
+          </div>
+          <div class="inputGrp">
+            <input type="radio" id="today" name="pages" />
+            <label for="today">Today</label>
+          </div>
+          <div class="inputGrp">
+            <input type="radio" id="this-week" name="pages" />
+            <label for="this-week">This Week</label>
+          </div>
+          <dl class="projects">
+            <dt>Projects</dt>
+            <dd>Project1</dd>
+          </dl>
+        </div>
+        <button class="addBtn">
+          <img
+            src="./plus-circle.svg"
+            alt="AddProjectButtonImg"
+            class="addBtnImg"
+          />
+        </button>
+      </div>
+      <div class="display"></div>
+    </div>
+    <dialog class="addProjectModal">
+      <h2>Add a New Project</h2>
+      <div class="inputGrp">
+        <label for="projectNameInput">Project Name</label>
+        <input type="text" id="projectNameInput" />
+      </div>
+      <button id="modalAddBtn">Add</button>
+    </dialog>
+  </body>
+</html>
