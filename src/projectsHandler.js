@@ -26,13 +26,11 @@ export function projectsManager(projectsStorage) {
     const newProject = new project(name);
     if (
       !this.projectsStorage.some((project) => {
-        if (
-          project.projectName === newProject.projectName &&
-          newProject.projectName != null
-        ) {
+        if (project.projectName === newProject.projectName) {
           return true;
         }
-      })
+      }) &&
+      /[\S\s]+[\S]+/.test(newProject.projectName)
     ) {
       addProject(newProject);
       return true;
