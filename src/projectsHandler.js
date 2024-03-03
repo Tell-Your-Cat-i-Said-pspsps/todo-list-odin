@@ -3,8 +3,14 @@ export class project {
     this.projectName = name;
     this.todos = [];
   }
+  removeTodo(todo) {
+    this.todos = this.todos.filter((projectTodo) => {
+      if (projectTodo.name != todo.name) {
+        return true;
+      }
+    });
+  }
 }
-
 export function projectsManager(projectsStorage) {
   this.projectsStorage = projectsStorage;
   const updateLocalStorage = () => {
@@ -16,27 +22,23 @@ export function projectsManager(projectsStorage) {
   const getProjectName = (project) => {
     return project.projectName;
   };
-  const getLastAddedProject = () => {
-    return this.projectsStorage[this.projectsStorage.length - 1];
-  };
   const addProject = (project) => {
     this.projectsStorage.push(project);
   };
   const createProject = (name) => {
-    const newProject = new project(name);
     if (
       !this.projectsStorage.some((project) => {
-        if (project.projectName === newProject.projectName) {
+        if (project.projectName === name) {
           return true;
         }
       }) &&
-      /[\S\s]+[\S]+/.test(newProject.projectName)
+      /[\S\s]+[\S]+/.test(name)
     ) {
-      addProject(newProject);
+      addProject(new project(name));
       return true;
     } else {
       console.log(
-        "Project with similar name already exist in your projects library or is a null value",
+        "Project with similar name already exist in your projects library or Entered name is a null value",
       );
       return false;
     }
@@ -56,6 +58,5 @@ export function projectsManager(projectsStorage) {
     removeProject,
     getProjectName,
     updateLocalStorage,
-    getLastAddedProject,
   };
 }

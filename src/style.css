@@ -86,7 +86,7 @@ body {
 .projects > dd {
   display: list-item;
   list-style-type: "#";
-  padding-inline-start: 1ch;
+  padding-inline-start: 4px;
 }
 .project {
   position: relative;
@@ -125,7 +125,8 @@ body {
   filter: var(--svg-filter);
 }
 
-.addProjectModal[open=""] {
+.addProjectModal[open=""],
+.modal[open=""] {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -167,4 +168,61 @@ body {
 #modalAddBtn:hover {
   background-color: var(--btn-background);
   color: var(--items-background);
+}
+.display {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 100px 1fr auto;
+  overflow-y: hidden;
+}
+.projectTodoArea {
+  display: grid;
+  grid-column: 1 / span 2;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  overflow-y: auto;
+}
+.todoCard {
+  background-color: var(--items-background);
+  color: var(--btn-background);
+  border-radius: 16px;
+  padding: 16px;
+  max-height: 300px;
+}
+
+.display .Btn {
+  align-self: center;
+  display: flex;
+  padding: 10px 16px;
+  align-items: center;
+  background-color: var(--btn-background);
+  color: var(--items-background);
+  border: none;
+  border-radius: 50dvh;
+  font-size: 18px;
+  font-weight: 700;
+}
+.Btn img {
+  filter: var(--svg-filter);
+}
+.display h1 {
+  align-self: center;
+}
+.removeTodoBtn,
+.editTodoBtn {
+  background-color: transparent;
+  border: none;
+  position: relative;
+  top: 5px;
+}
+.removeTodoBtnImg,
+.editTodoBtnImg {
+  filter: var(--svg-filter);
+  height: 30px;
+  width: auto;
+  opacity: 50%;
+}
+.removeTodoBtnImg:hover,
+.editTodoBtnImg:hover {
+  opacity: 100%;
 }
