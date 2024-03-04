@@ -1,7 +1,17 @@
 import deleteImg from "./deleteImg.svg";
 import editImg from "./square-edit-outline.svg";
 import closeImg from "./close.svg";
-import { compareAsc, formatDistanceToNow } from "date-fns";
+import { enGB } from "date-fns/locale/en-GB";
+import {
+  compareAsc,
+  format,
+  formatDistanceToNow,
+  formatRelative,
+  isThisWeek,
+  isToday,
+  isWithinInterval,
+  subWeeks,
+} from "date-fns";
 export function domProjectTabLoader(
   project,
   domProjectsTabContainer,
@@ -90,7 +100,6 @@ export function loadProjects(
   submitFn,
   removeTodoFn,
 ) {
-  projectTabContainer.innerHTML = "";
   for (let i = 0; i < storage.length; i++) {
     domProjectTabLoader(
       storage[i],
@@ -111,6 +120,7 @@ export function loadProjectPage(
   removeTodoFn,
 ) {
   try {
+    display.classList.add("projectDisplay");
     project.todos;
     const projectPageTitle = document.createElement("h1");
     projectPageTitle.classList.add("pageTitle");
@@ -171,12 +181,7 @@ function loadTodo(
   submitFn,
   removeTodoFn,
 ) {
-  const name = todo.name;
-  const dueDate = todo.dueDate;
-  const description = todo.description;
-  const priority = todo.priority;
-  const todoCard = document.createElement("div");
-  todoCard.classList.add("todoCard");
+  const todoCard = loadTodoCard(todo);
   const removeBtn = document.createElement("button");
   const removeBtnImg = document.createElement("img");
   removeBtn.classList.add("removeTodoBtn");
@@ -192,13 +197,17 @@ function loadTodo(
   removeBtn.addEventListener("click", () => {
     try {
       project.todos = removeTodoFn(project.todos, todo);
-      loadProjectTodos(
-        project,
-        todosArea,
-        updateStorageFn,
-        submitFn,
-        removeTodoFn,
-      );
+      if (project.todos.length) {
+        loadProjectTodos(
+          project,
+          todosArea,
+          updateStorageFn,
+          submitFn,
+          removeTodoFn,
+        );
+      } else {
+        todosArea.textContent = "No Todos To Display";
+      }
       updateStorageFn();
     } catch (err) {
       loadErrorModal(err);
@@ -214,25 +223,6 @@ function loadTodo(
       todo,
     );
   });
-  const cardTitle = document.createElement("h2");
-  cardTitle.classList.add("cardTitle");
-  cardTitle.textContent = name;
-  const cardBody = document.createElement("div");
-  cardBody.classList.add("cardBody");
-  const todoDescription = document.createElement("div");
-  todoDescription.classList.add("todoDescription");
-  todoDescription.textContent = `Description: ${description}`;
-  const todoPriority = document.createElement("div");
-  todoPriority.classList.add("todoPriority");
-  todoPriority.textContent = `Priority: ${priority}`;
-  const todoDueDate = document.createElement("div");
-  todoDueDate.classList.add("todoDueDate");
-  todoDueDate.textContent = `Due Date: ${dueDate} (${formatDistanceToNow(dueDate)})`;
-  cardBody.appendChild(todoDescription);
-  cardBody.appendChild(todoPriority);
-  cardBody.appendChild(todoDueDate);
-  todoCard.appendChild(cardTitle);
-  todoCard.appendChild(cardBody);
   todoCard.appendChild(editTodoBtn);
   todoCard.appendChild(removeBtn);
   return todoCard;
@@ -384,4 +374,132 @@ function openTodoModal(
   todoModal.appendChild(closeBtn);
   document.body.appendChild(todoModal);
   todoModal.showModal();
+}
+export function loadPage(storage, display, condition) {
+  display.innerHTML = "";
+  display.classList.remove("projectDisplay");
+  for (let i = 0; i < storage.length; i++) {
+    if (Array.isArray(storage[i].todos) && storage[i].todos.length) {
+      if (
+        storage[i].todos.some((todo) => {
+          if (condition(todo.dueDate)) {
+            return true;
+          }
+        })
+      ) {
+        const projectTodayTodosArea = document.createElement("div");
+        const projectTodayTodosAreaTitle = document.createElement("h1");
+        projectTodayTodosAreaTitle.textContent = `Project: ${storage[i].projectName}`;
+        const projectTodayTodosAreaBody = document.createElement("div");
+        projectTodayTodosAreaBody.classList.add("projectTodayTodoArea");
+        const projectTodayTodos = storage[i].todos.filter((projectTodo) => {
+          if (condition(projectTodo.dueDate)) {
+            return true;
+          }
+        });
+
+        for (let j = 0; j < projectTodayTodos.length; j++) {
+          projectTodayTodosAreaBody.appendChild(
+            loadTodoCard(projectTodayTodos[j]),
+          );
+        }
+        projectTodayTodosArea.appendChild(projectTodayTodosAreaTitle);
+        projectTodayTodosArea.appendChild(projectTodayTodosAreaBody);
+        display.appendChild(projectTodayTodosArea);
+      }
+    }
+  }
+}
+function loadTodoCard(todo) {
+  const name = todo.name;
+  const dueDate = todo.dueDate;
+  const description = todo.description;
+  const priority = todo.priority;
+  const todoCard = document.createElement("div");
+  todoCard.classList.add("todoCard");
+  const cardTitle = document.createElement("h2");
+  cardTitle.classList.add("cardTitle");
+  cardTitle.textContent = name;
+  const cardBody = document.createElement("div");
+  cardBody.classList.add("cardBody");
+  const todoDescription = document.createElement("div");
+  const todoDescriptionLabel = document.createElement("div");
+  todoDescriptionLabel.classList.add("cardFieldLabel");
+  todoDescriptionLabel.textContent = "Description:";
+  const todoDescriptionBody = document.createElement("div");
+  todoDescriptionBody.classList.add("todoDescription");
+  todoDescriptionBody.textContent = description;
+  todoDescription.appendChild(todoDescriptionLabel);
+  todoDescription.appendChild(todoDescriptionBody);
+  const todoPriorityField = document.createElement("div");
+  todoPriorityField.classList.add("cardField");
+  const todoPriorityLabel = document.createElement("span");
+  todoPriorityLabel.classList.add("cardFieldLabel");
+  todoPriorityLabel.textContent = "Priority: ";
+  const todoPriority = document.createElement("span");
+  todoPriority.classList = "";
+  todoPriority.classList.add(priority);
+  todoPriority.textContent = priority;
+  todoPriorityField.appendChild(todoPriorityLabel);
+  todoPriorityField.appendChild(todoPriority);
+  const todoDueDateField = document.createElement("div");
+  todoDueDateField.classList.add("cardField");
+  const todoDueDateFieldLabel = document.createElement("span");
+  todoDueDateFieldLabel.classList.add("cardFieldLabel");
+  todoDueDateFieldLabel.textContent = "Due Date: ";
+  const todoDueDate = document.createElement("span");
+  todoDueDate.classList.add("todoDueDate");
+  if (isToday(dueDate)) {
+    todoDueDate.textContent = `${dueDate} (Today)`;
+  } else if (
+    isThisWeek(dueDate) ||
+    isWithinInterval(dueDate, {
+      start: subWeeks(new Date(), 1),
+      end: new Date(),
+    })
+  ) {
+    const formatRelativeLocale = {
+      lastWeek: "'Last' eeee",
+      yesterday: "'Yesterday'",
+      today: "'Today'",
+      tomorrow: "'Tomorrow'",
+      nextWeek: "'Next' eeee",
+      other: "dd.MM.yyyy",
+    };
+
+    const locale = {
+      ...enGB,
+      formatRelative: (token) => formatRelativeLocale[token],
+    };
+
+    todoDueDate.textContent = `${dueDate} (${formatRelative(dueDate, new Date(), { locale })})`;
+  } else {
+    todoDueDate.textContent = `${dueDate} (${formatDistanceToNow(dueDate)})`;
+  }
+  todoDueDateField.appendChild(todoDueDateFieldLabel);
+  todoDueDateField.appendChild(todoDueDate);
+  const todoStatus = document.createElement("div");
+  todoStatus.classList.add("inputGrp");
+  const todoStatusInput = document.createElement("input");
+  todoStatusInput.type = "checkbox";
+  todoStatusInput.id = `${name}Status`;
+  if (todo.isDone) {
+    todoStatusInput.checked = true;
+  }
+  todoStatusInput.addEventListener("change", () => {
+    todo.doneToggle();
+    console.log(todo.isDone);
+  });
+  const todoStatusLabel = document.createElement("label");
+  todoStatusLabel.setAttribute("for", todoStatusInput.id);
+  todoStatusLabel.textContent = "Done: ";
+  todoStatus.appendChild(todoStatusLabel);
+  todoStatus.appendChild(todoStatusInput);
+  cardBody.appendChild(todoDescription);
+  cardBody.appendChild(todoPriorityField);
+  cardBody.appendChild(todoDueDateField);
+  todoCard.appendChild(cardTitle);
+  todoCard.appendChild(cardBody);
+  todoCard.appendChild(todoStatus);
+  return todoCard;
 }

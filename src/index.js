@@ -3,6 +3,7 @@ import { projectsManager } from "./projectsHandler.js";
 import * as domHandler from "./domHandler.js";
 import { getProjectsStorage } from "./storageHandler.js";
 import { removeTodoFn, submitTodoFn } from "./todoHandler.js";
+import { isThisWeek, isToday } from "date-fns";
 const addBtn = document.querySelector(".addBtn");
 const addProjectModal = document.querySelector(".addProjectModal");
 const closeModalBtn = document.querySelector(".closeBtn");
@@ -11,7 +12,9 @@ const modalAddProjectBtn = document.querySelector("#modalAddProjectBtn");
 const projectNameInput = document.querySelector("#projectNameInput");
 const userProjectsStorage = getProjectsStorage();
 const userProjectManager = new projectsManager(userProjectsStorage);
-const projectDisplayArea = document.querySelector(".display");
+const displayArea = document.querySelector(".display");
+const todayTab = document.querySelector("#today");
+const thisWeekTab = document.querySelector("#this-week");
 
 addBtn.addEventListener("click", () => {
   addProjectModal.showModal();
@@ -31,7 +34,7 @@ domHandler.loadProjects(
   sidebarProjectsArea,
   userProjectManager.removeProject,
   userProjectManager.updateLocalStorage,
-  projectDisplayArea,
+  displayArea,
   submitTodoFn,
   removeTodoFn,
 );
@@ -44,10 +47,30 @@ function appendNewProject() {
     sidebarProjectsArea,
     userProjectManager.removeProject,
     userProjectManager.updateLocalStorage,
-    projectDisplayArea,
+    displayArea,
     submitTodoFn,
     removeTodoFn,
   );
   addProjectModal.close();
   projectNameInput.value = "";
 }
+//load Today Todos For Each Project
+
+todayTab.addEventListener("change", () => {
+  if (todayTab.checked) {
+    domHandler.loadPage(
+      userProjectManager.getProjectsStorage(),
+      displayArea,
+      isToday,
+    );
+  }
+});
+thisWeekTab.addEventListener("change", () => {
+  if (thisWeekTab.checked) {
+    domHandler.loadPage(
+      userProjectManager.getProjectsStorage(),
+      displayArea,
+      isThisWeek,
+    );
+  }
+});

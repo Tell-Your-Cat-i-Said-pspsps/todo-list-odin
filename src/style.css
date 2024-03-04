@@ -4,6 +4,7 @@
   --btn-background: #020617;
   --svg-filter: invert(2%) sepia(30%) saturate(7484%) hue-rotate(224deg)
     brightness(90%) contrast(101%);
+  --medium: #856404;
   height: 100%;
 }
 
@@ -113,11 +114,21 @@ body {
   background-color: transparent;
   border: none;
   justify-self: start;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  font-size: 16px;
+}
+.addBtn:hover::after {
+  content: "Add Project";
 }
 
 .addBtnImg {
   height: 60px;
   widows: auto;
+  margin: 0;
 }
 
 .addBtnImg:hover {
@@ -169,7 +180,7 @@ body {
   background-color: var(--btn-background);
   color: var(--items-background);
 }
-.display {
+.projectDisplay {
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows: 100px 1fr auto;
@@ -182,12 +193,37 @@ body {
   gap: 16px;
   overflow-y: auto;
 }
+.projectTodayTodoArea {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
 .todoCard {
   background-color: var(--items-background);
   color: var(--btn-background);
   border-radius: 16px;
   padding: 16px;
   max-height: 300px;
+  position: relative;
+}
+.todoCard > .inputGrp {
+  margin: 0;
+}
+.todoCard .cardFieldLabel,
+.todoCard label {
+  font-weight: 700;
+}
+.High {
+  color: red;
+}
+.Medium {
+  color: var(--medium);
+}
+.todoDescription {
+  overflow: auto;
+  overflow-wrap: break-word;
+  max-height: 80px;
+  margin-bottom: 4px;
 }
 
 .display .Btn {
@@ -212,8 +248,14 @@ body {
 .editTodoBtn {
   background-color: transparent;
   border: none;
-  position: relative;
-  top: 5px;
+  position: absolute;
+  top: 8px;
+}
+.removeTodoBtn {
+  right: 5px;
+}
+.editTodoBtn {
+  right: 35px;
 }
 .removeTodoBtnImg,
 .editTodoBtnImg {

@@ -5,9 +5,14 @@ export class todo {
     this.dueDate = dueDate || new Date();
     this.description = description || "No Description";
     this.priority = priority || "Normal";
+    this.isDone = false;
+  }
+  doneToggle() {
+    this.isDone = !this.isDone;
+    return this.isDone;
   }
 }
-//this function will add a new todo to todos list of edit an existing todo
+//this function will add a new todo to todos list or edit an existing todo
 export function submitTodoFn(name, description, dueDate, priority, element) {
   if (Array.isArray(element)) {
     element.push(new todo(name, dueDate, description, priority));
