@@ -1,7 +1,6 @@
 import deleteImg from "./deleteImg.svg";
 import editImg from "./square-edit-outline.svg";
 import closeImg from "./close.svg";
-import { todo } from "./todoHandler";
 import { compareAsc, formatDistanceToNow } from "date-fns";
 export function domProjectTabLoader(
   project,
@@ -91,6 +90,7 @@ export function loadProjects(
   submitFn,
   removeTodoFn,
 ) {
+  projectTabContainer.innerHTML = "";
   for (let i = 0; i < storage.length; i++) {
     domProjectTabLoader(
       storage[i],
@@ -112,7 +112,6 @@ export function loadProjectPage(
 ) {
   try {
     project.todos;
-    console.log(project.todos);
     const projectPageTitle = document.createElement("h1");
     projectPageTitle.classList.add("pageTitle");
     projectPageTitle.textContent = `Project: ${project.projectName}`;
@@ -258,7 +257,6 @@ function loadProjectTodos(
       ),
     );
   }
-  console.log(project.todos);
 }
 function openTodoModal(
   submitFn,
@@ -297,6 +295,7 @@ function openTodoModal(
   todoDueDate.classList.add("inputGrp");
   const todoDueDateInput = document.createElement("input");
   todoDueDateInput.type = "date";
+  todoDueDateInput.valueAsDate = new Date();
   todoDueDateInput.id = "todoDueDateInput";
   const todoDueDateInputLabel = document.createElement("label");
   todoDueDateInputLabel.setAttribute("for", todoDueDateInput.id);
@@ -323,6 +322,7 @@ function openTodoModal(
     priorityInputGrp.appendChild(priorityInputLabel);
     todoPriority.appendChild(priorityInputGrp);
   }
+  todoPriority.querySelector(`input[value='Normal']`).checked = true;
   if (todo != null) {
     todoModalTitle.textContent = `Edit Todo: ${todo.name}`;
     todoNameInput.value = todo.name;
@@ -352,7 +352,6 @@ function openTodoModal(
           submitTo,
         );
       }
-      console.log(project.todos);
       updateStorageFn();
       loadProjectTodos(
         project,

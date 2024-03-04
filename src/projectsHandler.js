@@ -3,27 +3,14 @@ export class project {
     this.projectName = name;
     this.todos = [];
   }
-  removeTodo(todo) {
-    this.todos = this.todos.filter((projectTodo) => {
-      if (projectTodo.name != todo.name) {
-        return true;
-      }
-    });
-  }
 }
 export function projectsManager(projectsStorage) {
   this.projectsStorage = projectsStorage;
   const updateLocalStorage = () => {
     localStorage.setItem("projects", JSON.stringify(this.projectsStorage));
   };
-  const getProjects = () => {
-    return projectsStorage;
-  };
-  const getProjectName = (project) => {
-    return project.projectName;
-  };
-  const addProject = (project) => {
-    this.projectsStorage.push(project);
+  const getProjectsStorage = () => {
+    return this.projectsStorage;
   };
   const createProject = (name) => {
     if (
@@ -34,7 +21,7 @@ export function projectsManager(projectsStorage) {
       }) &&
       /[\S\s]+[\S]+/.test(name)
     ) {
-      addProject(new project(name));
+      this.projectsStorage.push(new project(name));
       return true;
     } else {
       console.log(
@@ -52,11 +39,9 @@ export function projectsManager(projectsStorage) {
   };
 
   return {
-    projectsStorage,
-    getProjects,
+    getProjectsStorage,
     createProject,
     removeProject,
-    getProjectName,
     updateLocalStorage,
   };
 }

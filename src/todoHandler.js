@@ -1,14 +1,29 @@
 import { compareAsc, formatDistanceToNow } from "date-fns";
 export class todo {
-  constructor(
-    name,
-    dueDate,
-    description = "No Description",
-    priority = "normal",
-  ) {
-    this.name = name;
-    this.dueDate = dueDate;
-    this.description = description;
-    this.priority = priority;
+  constructor(name, dueDate, description, priority) {
+    this.name = name || "No Name";
+    this.dueDate = dueDate || new Date();
+    this.description = description || "No Description";
+    this.priority = priority || "Normal";
   }
+}
+//this function will add a new todo to todos list of edit an existing todo
+export function submitTodoFn(name, description, dueDate, priority, element) {
+  if (Array.isArray(element)) {
+    element.push(new todo(name, dueDate, description, priority));
+  } else if (element instanceof todo) {
+    element.name = name;
+    element.dueDate = dueDate;
+    element.description = description;
+    element.priority = priority;
+  }
+}
+//this Fn will remove a Todo from todos Array
+export function removeTodoFn(todos, todo) {
+  todos = todos.filter((projectTodo) => {
+    if (projectTodo.name != todo.name) {
+      return true;
+    }
+  });
+  return todos;
 }
