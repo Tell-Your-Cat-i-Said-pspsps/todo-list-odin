@@ -1,4 +1,4 @@
-import { compareAsc, formatDistanceToNow } from "date-fns";
+import { compareAsc, formatDistanceToNow, isPast } from "date-fns";
 export class todo {
   constructor(name, dueDate, description, priority) {
     this.name = name || "No Name";
@@ -8,8 +8,12 @@ export class todo {
     this.isDone = false;
   }
   doneToggle() {
-    this.isDone = !this.isDone;
-    return this.isDone;
+    if (!isPast(this.dueDate)) {
+      this.isDone = !this.isDone;
+      return this.isDone;
+    } else {
+      console.log("Cant change done status the todo is past its due date");
+    }
   }
 }
 //this function will add a new todo to todos list or edit an existing todo

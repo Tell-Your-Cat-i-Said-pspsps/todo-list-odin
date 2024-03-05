@@ -7,6 +7,7 @@ import {
   format,
   formatDistanceToNow,
   formatRelative,
+  isPast,
   isThisWeek,
   isToday,
   isWithinInterval,
@@ -486,10 +487,18 @@ function loadTodoCard(todo) {
   if (todo.isDone) {
     todoStatusInput.checked = true;
   }
-  todoStatusInput.addEventListener("change", () => {
-    todo.doneToggle();
-    console.log(todo.isDone);
-  });
+  if (!isPast(dueDate) || isToday(dueDate)) {
+    todoStatusInput.addEventListener("change", () => {
+      todo.doneToggle();
+      console.log(todo.isDone);
+    });
+  } else if (!todo.isDone) {
+    todoStatusInput.disabled = true;
+    cardTitle.textContent = `${name} (Past its due date)`;
+  } else {
+    todoStatusInput.disabled = true;
+  }
+
   const todoStatusLabel = document.createElement("label");
   todoStatusLabel.setAttribute("for", todoStatusInput.id);
   todoStatusLabel.textContent = "Done: ";

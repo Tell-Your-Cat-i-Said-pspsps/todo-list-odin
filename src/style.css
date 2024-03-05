@@ -190,12 +190,14 @@ body {
   display: grid;
   grid-column: 1 / span 2;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-rows: repeat(auto-fill, 250px);
   gap: 16px;
   overflow-y: auto;
 }
 .projectTodayTodoArea {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(1fr, 250px));
   gap: 16px;
 }
 .todoCard {
@@ -203,7 +205,7 @@ body {
   color: var(--btn-background);
   border-radius: 16px;
   padding: 16px;
-  max-height: 300px;
+  max-height: 250px;
   position: relative;
 }
 .todoCard > .inputGrp {
@@ -222,7 +224,7 @@ body {
 .todoDescription {
   overflow: auto;
   overflow-wrap: break-word;
-  max-height: 80px;
+  max-height: 60px;
   margin-bottom: 4px;
 }
 
