@@ -376,9 +376,57 @@ function openTodoModal(
   document.body.appendChild(todoModal);
   todoModal.showModal();
 }
+export function loadHomePage(storage, display) {
+  display.innerHTML = "";
+  display.classList.remove("projectDisplay");
+  const emptyPageMsg = document.createElement("h2");
+  emptyPageMsg.textContent = `No Available Tasks`;
+  display.appendChild(emptyPageMsg);
+  for (let i = 0; i < storage.length; i++) {
+    if (Array.isArray(storage[i].todos) && storage[i].todos.length) {
+      if (!(emptyPageMsg == null)) {
+        emptyPageMsg.remove();
+      }
+      const pageProjectTodosArea = document.createElement("div");
+      pageProjectTodosArea.classList.add("homeProjectArea");
+      const pageProjectTodosAreaTitle = document.createElement("h1");
+      pageProjectTodosAreaTitle.textContent = `Project: ${storage[i].projectName}`;
+      const pageProjectTodoAreaBody = document.createElement("div");
+      pageProjectTodoAreaBody.classList.add("projectTodoArea");
+      const loadProjectPageBtn = document.createElement("button");
+      loadProjectPageBtn.classList.add("Btn");
+      loadProjectPageBtn.textContent = "Open Project Page";
+      loadProjectPageBtn.addEventListener("click", () => {
+        try {
+          const projectPage = document.querySelector(
+            `#${storage[i].projectName}`,
+          );
+          projectPage.click();
+        } catch (err) {
+          loadErrorModal(err);
+        }
+      });
+
+      let length = 4;
+      if (storage[i].todos.length < length) {
+        length = storage[i].todos.length;
+      }
+      for (let j = 0; j < length; j++) {
+        pageProjectTodoAreaBody.appendChild(loadTodoCard(storage[i].todos[j]));
+      }
+      pageProjectTodosArea.appendChild(pageProjectTodosAreaTitle);
+      pageProjectTodosArea.appendChild(loadProjectPageBtn);
+      pageProjectTodosArea.appendChild(pageProjectTodoAreaBody);
+      display.appendChild(pageProjectTodosArea);
+    }
+  }
+}
 export function loadPage(storage, display, condition) {
   display.innerHTML = "";
   display.classList.remove("projectDisplay");
+  const emptyPageMsg = document.createElement("h2");
+  emptyPageMsg.textContent = `No Available Tasks`;
+  display.appendChild(emptyPageMsg);
   for (let i = 0; i < storage.length; i++) {
     if (Array.isArray(storage[i].todos) && storage[i].todos.length) {
       if (
@@ -388,25 +436,26 @@ export function loadPage(storage, display, condition) {
           }
         })
       ) {
-        const projectTodayTodosArea = document.createElement("div");
-        const projectTodayTodosAreaTitle = document.createElement("h1");
-        projectTodayTodosAreaTitle.textContent = `Project: ${storage[i].projectName}`;
-        const projectTodayTodosAreaBody = document.createElement("div");
-        projectTodayTodosAreaBody.classList.add("projectTodayTodoArea");
-        const projectTodayTodos = storage[i].todos.filter((projectTodo) => {
+        if (!(emptyPageMsg == null)) {
+          emptyPageMsg.remove();
+        }
+        const pageProjectTodosArea = document.createElement("div");
+        const pageProjectTodosAreaTitle = document.createElement("h1");
+        pageProjectTodosAreaTitle.textContent = `Project: ${storage[i].projectName}`;
+        const pageProjectTodoAreaBody = document.createElement("div");
+        pageProjectTodoAreaBody.classList.add("projectTodayTodoArea");
+        const pageTodos = storage[i].todos.filter((projectTodo) => {
           if (condition(projectTodo.dueDate)) {
             return true;
           }
         });
 
-        for (let j = 0; j < projectTodayTodos.length; j++) {
-          projectTodayTodosAreaBody.appendChild(
-            loadTodoCard(projectTodayTodos[j]),
-          );
+        for (let j = 0; j < pageTodos.length; j++) {
+          pageProjectTodoAreaBody.appendChild(loadTodoCard(pageTodos[j]));
         }
-        projectTodayTodosArea.appendChild(projectTodayTodosAreaTitle);
-        projectTodayTodosArea.appendChild(projectTodayTodosAreaBody);
-        display.appendChild(projectTodayTodosArea);
+        pageProjectTodosArea.appendChild(pageProjectTodosAreaTitle);
+        pageProjectTodosArea.appendChild(pageProjectTodoAreaBody);
+        display.appendChild(pageProjectTodosArea);
       }
     }
   }

@@ -15,6 +15,7 @@ const userProjectManager = new projectsManager(userProjectsStorage);
 const displayArea = document.querySelector(".display");
 const todayTab = document.querySelector("#today");
 const thisWeekTab = document.querySelector("#this-week");
+const homeTab = document.querySelector("#home");
 
 addBtn.addEventListener("click", () => {
   addProjectModal.showModal();
@@ -54,6 +55,15 @@ function appendNewProject() {
   addProjectModal.close();
   projectNameInput.value = "";
 }
+homeTab.addEventListener("change", () => {
+  if (homeTab.checked) {
+    domHandler.loadHomePage(
+      userProjectManager.getProjectsStorage(),
+      displayArea,
+    );
+  }
+});
+
 //load Today Todos For Each Project
 
 todayTab.addEventListener("change", () => {
@@ -65,7 +75,7 @@ todayTab.addEventListener("change", () => {
     );
   }
 });
-thisWeekTab.addEventListener("change", () => {
+thisWeekTab.addEventListener("click", () => {
   if (thisWeekTab.checked) {
     domHandler.loadPage(
       userProjectManager.getProjectsStorage(),
@@ -74,3 +84,6 @@ thisWeekTab.addEventListener("change", () => {
     );
   }
 });
+
+homeTab.checked = true;
+domHandler.loadHomePage(userProjectManager.getProjectsStorage(), displayArea);

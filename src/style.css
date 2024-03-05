@@ -194,6 +194,13 @@ body {
   gap: 16px;
   overflow-y: auto;
 }
+.homeProjectArea {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  border: solid 6px var(--btn-background);
+  border-radius: 16px;
+  padding: 16px 8px;
+}
 .projectTodayTodoArea {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -269,4 +276,8 @@ body {
 .removeTodoBtnImg:hover,
 .editTodoBtnImg:hover {
   opacity: 100%;
+}
+.display {
+  display: grid;
+  gap: 8px;
 }
